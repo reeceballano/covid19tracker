@@ -1,18 +1,88 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+
+    <div class="country-select">
+      <select v-model="country" @change="gotoLocation($event)" >
+        <option value="select" :selected="true"> -- SELECT COUNTRY -- </option>
+        <option v-for="(country,i) in getCovidData" 
+        :key="i"
+        :value="country">
+          {{ country.country }}
+        </option>
+      </select>
+    </div>
+
+    <app-map
+      ref="map"
+    >
+
+    </app-map>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import Map from '@/components/Map';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'Home',
   components: {
-    HelloWorld
+    'app-map': Map,
+  },
+
+  data() {
+    return {
+      markerPlace: [
+        [14.5995, 120.9842, 2],
+        [14.48369, 120.89878, 5],
+        [14.6255, 121.1245, 4],
+      ],
+
+      country: [],
+
+    }
+  },
+  
+  computed: {
+    ...mapGetters('covid', ['getCovidData']),
+  },
+
+  async created() {
+    },
+
+  async mounted() {
+    await this.$store.dispatch('covid/allCovid');
+  },
+
+  methods: {
+    gotoLocation() {
+      const lat = this.country.countryInfo.lat;
+      const long = this.country.countryInfo.long;
+      const currentMap = this.country.countryInfo.iso3;
+
+      this.$refs.map.gotoLocation(long, lat, currentMap);
+    },
+
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  .country-select {
+    position: absolute;
+    z-index: 99999;
+    background: #396b967d;
+    width: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100px;
+    top: 50px;
+    left: 5%;
+
+    select {
+      border: 0;
+      padding: 10px;
+    }
+  }
+</style>
