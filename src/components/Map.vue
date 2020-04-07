@@ -1,5 +1,6 @@
 <template>
     <div class="map-container">
+        {{ getCurrentGeoCountry }}
         <div id="mapid">
         </div>
     </div>
@@ -165,12 +166,9 @@ export default {
         justify-content: center;
     }
 
-    .leaflet-tooltip-pane {
-        position: absolute;
-        left: 43%;
+    .leaflet-popup-content {
         text-align: left;
-        padding: 20px !important;
-        width: 115px;
+        padding: 10px !important;
 
         h2 {
             margin-bottom: 0;
