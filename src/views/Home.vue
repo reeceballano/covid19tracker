@@ -60,6 +60,8 @@ export default {
       const long = this.country.countryInfo.long;
       const currentMap = this.country.countryInfo.iso3;
 
+      this.$store.dispatch('covid/setGeoCountry', currentMap);
+
       this.$refs.map.gotoLocation(long, lat, currentMap);
     },
 

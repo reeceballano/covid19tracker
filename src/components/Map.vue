@@ -1,11 +1,13 @@
 <template>
     <div class="map-container">
+        {{ getCurrentGeoCountry }}
         <div id="mapid">
         </div>
     </div>
 </template>
 
 <script>
+// import axios from 'axios';
 import leaflet from 'leaflet';
 import { mapGetters } from 'vuex';
 
@@ -23,11 +25,12 @@ export default {
     },
 
     computed: {
-        ...mapGetters('covid', ['getCovidData']),
+        ...mapGetters('covid', ['getCovidData', 'getGeoData', 'getCurrentGeoCountry']),
     },
 
     async created() {
         await this.$store.dispatch('covid/allCovid');
+        await this.$store.dispatch('covid/allGeoData');
         await this.mapMarker();
     },
 
@@ -54,13 +57,36 @@ export default {
                 this.marker = new leaflet.marker([map.countryInfo.lat, map.countryInfo.long], {
                     icon: leaflet.divIcon({
                         className: `my-custom-icon ${map.countryInfo.iso3}`,
-                        html: `${map.cases}`
+                        html: `${this.kFormatter(Number(map.cases))}`
                     })
-                }).addTo(this.map);   
-            }); 
+                }).addTo(this.map)
+                .bindPopup(`
+                    <div class="popUpInfo">
+                        <h2>${map.country}</h2>
+                        <img src="${map.countryInfo.flag}" width="10px"/>
+                        <ul>
+                            <li>Total Cases: ${this.kFormatter(map.cases)}</li>
+                            <li>Recovered: ${this.kFormatter(map.recovered)}</li>
+                        </ul>
+                    
+                    </div
+                `)
+                // .on('mouseover', function () {
+                //     this.openPopup();
+                // })
+                // .on('mouseout', function () {
+                //     this.closePopup();
+                // });
+
+            });
+  
         },
 
-        gotoLocation(long, lat, currentMap) {
+        kFormatter(num) {
+            return Math.abs(num) > 999 ? Math.sign(num)*((Math.abs(num)/1000).toFixed(1)) + 'k' : Math.sign(num)*Math.abs(num);
+        },
+
+        async gotoLocation(long, lat, currentMap) {
             console.log('from child');
             // this.$emit('gotoLocation');
             // this.map.flyTo([long, lat], 4);
@@ -82,6 +108,35 @@ export default {
             setTimeout( () => {
                 current[0].classList.remove("activeLocation");
             }, 10000);
+
+            // GEO DATA
+
+            // for(let i = 0; i < this.getGeoData.length; i++) {
+            //     const currentCountryGeo = this.getGeoData[i].properties['SOV_A3'];
+
+
+            // }
+
+            this.getGeoData.filter(item => {
+                if(currentMap === item.properties['SOV_A3']) {
+                    console.log('okay');
+                    leaflet.geoJson(item).addTo(this.map);
+
+                    setTimeout( () => {
+                        const myStyle = {
+                            "color": "#ff7800",
+                            "weight": 5,
+                            "opacity": 0.65
+                        };
+
+                        leaflet.geoJSON(item, {
+                            style: myStyle
+                        }).addTo(this.map);
+                    }, 5000);
+                }
+            });
+
+            // console.log(JSON.stringify(x));
 
         }
     }
@@ -109,11 +164,34 @@ export default {
         display: flex !important;
         align-items: center;
         justify-content: center;
-        
-
-
     }
 
+    .leaflet-popup-pane {
+        position: absolute;
+        left: 43%;
+        background: seagreen;
+        text-align: left;
+        padding: 20px !important;
+        width: 115px;
+
+        h2 {
+            margin-bottom: 0;
+        }
+
+        img {
+            width: 50px;
+        }
+
+        ul {
+            padding-left: 0;
+            list-style-type: none;
+
+            li {
+
+            }
+        }
+    }
+    
     .activeLocation {
         margin:100px;
         display: block;
