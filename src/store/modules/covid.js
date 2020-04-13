@@ -20,7 +20,17 @@ const getters = {
 
     getCurrentGeoCountry: state => {
         return state.currentGeoCountry;
-    }
+    },
+
+    getHighestCase: state => {
+        const country = state.allData;
+
+        const res = country.map( (item) => {
+            return item.cases;
+        });
+
+        return Math.max(res);
+    },
 
 }
 

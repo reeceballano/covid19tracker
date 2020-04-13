@@ -1,6 +1,5 @@
 <template>
     <div class="map-container">
-        {{ getCurrentGeoCountry }}
         <div id="mapid">
         </div>
     </div>

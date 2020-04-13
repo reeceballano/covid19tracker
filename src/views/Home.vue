@@ -1,15 +1,20 @@
 <template>
   <div class="home">
-
     <div class="country-select">
-      <select v-model="country" @change="gotoLocation($event)" >
-        <option value="select" :selected="true"> -- SELECT COUNTRY -- </option>
-        <option v-for="(country,i) in getCovidData" 
-        :key="i"
-        :value="country">
-          {{ country.country }}
-        </option>
-      </select>
+      <div class="field">
+        <div class="control">
+          <div class="select is-primary">
+            <select v-model="country" @change="gotoLocation($event)" >
+              <option value="select" :selected="true"> -- SELECT COUNTRY -- </option>
+              <option v-for="(country,i) in getCovidData" 
+              :key="i"
+              :value="country">
+                {{ country.country }}
+              </option>
+            </select>
+          </div>
+        </div>
+      </div>
     </div>
 
     <app-map
@@ -79,8 +84,8 @@ export default {
     align-items: center;
     justify-content: center;
     height: 100px;
-    top: 50px;
-    left: 5%;
+    top: 14%;
+    left: 6%;
 
     select {
       border: 0;
