@@ -7,6 +7,8 @@ const state = {
     geoData: [],
     currentGeoCountry: '',
     highestCasesCountry: [],
+    highestRecoveriesCountry: [],
+    highestDeathsCountry: [],
     isLoading: false,
 }
 
@@ -25,8 +27,15 @@ const getters = {
     },
 
     getHighestCase: (state) => {
-        // return 'test'
         return state.highestCasesCountry;
+    },
+
+    getHighestRecoveries: (state) => {
+        return state.highestRecoveriesCountry;
+    },
+
+    getHighestDeaths: (state) => {
+        return state.highestDeathsCountry;
     },
 
     getIsLoading: state => {
@@ -53,6 +62,14 @@ const mutations = {
         state.highestCasesCountry = highestCasesCountry;
     },
 
+    SET_HIGHEST_RECOVERIES_COUNTRY(state, highestRecoveriesCountry) {
+        state.highestRecoveriesCountry = highestRecoveriesCountry;
+    },
+
+    SET_HIGHEST_DEATHS_COUNTRY(state, highestDeathsCountry) {
+        state.highestDeathsCountry = highestDeathsCountry;
+    },
+
     SET_ISLOADING(state, isLoading) {
         state.isLoading = isLoading;
     }
@@ -67,8 +84,8 @@ const actions = {
 
         try {
             const response = await axios.get('https://corona.lmao.ninja/countries');
-            const allTasks = response.data;
-            commit('SET_COVID', allTasks);
+            const allData = response.data;
+            commit('SET_COVID', allData);
             commit('SET_ISLOADING', false);
 
         } catch (error) {  
@@ -100,9 +117,23 @@ const actions = {
         const highest = country.reduce( (max, map) => (max.cases > map.cases) ? max : map);
 
         await commit('SET_HIGHEST_CASES_COUNTRY', highest);
+    },
+
+    async highestRecoveriesCountry({ commit, state }) {
+        const country = await state.allData;
+
+        const highest = country.reduce( (max, map) => (max.recovered > map.recovered) ? max : map);
+
+        await commit('SET_HIGHEST_RECOVERIES_COUNTRY', highest);
+    },
+
+    async highestDeathsCountry({ commit, state }) {
+        const country = await state.allData;
+
+        const highest = country.reduce( (max, map) => (max.deaths > map.deaths) ? max : map);
+
+        await commit('SET_HIGHEST_DEATHS_COUNTRY', highest);
     }
-
-
 
 }
 

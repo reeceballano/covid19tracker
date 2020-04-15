@@ -5,7 +5,7 @@
         <div class="control">
           <div class="select is-primary">
             <select v-model="country" @change="gotoLocation($event)" >
-              <option value="select" :selected="true"> -- SELECT COUNTRY -- </option>
+              <option :selected="true"> -- SELECT COUNTRY -- </option>
               <option v-for="(country,i) in getCovidData" 
               :key="i"
               :value="country">
@@ -53,7 +53,7 @@ export default {
   },
 
   async created() {
-    },
+  },
 
   async mounted() {
     await this.$store.dispatch('covid/allCovid');

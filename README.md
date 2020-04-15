@@ -20,5 +20,13 @@ npm run build
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Built with
+
+- Vuejs
+- Vuex
+- API (https://corona.lmao.ninja/countries)
+- GEOLOCATION (https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson)
+- Countup.js
+- Leaflet.js (Map)
+- Axios
+- Bulma

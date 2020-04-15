@@ -7,22 +7,23 @@
                     <img width="30px" :src="countryFlag.cases">
 
                     <h3><strong>Country:</strong> {{ getHighestCase.country }}</h3>  
-                    <h3><strong>Total Cases:</strong> {{ getHighestCase.cases }}</h3>   
+                    <h3><strong>Total Cases:</strong> <span id="cases"></span></h3>  
+                    
                 </div>
 
                 <div class="column is-4 highest-recoveries">
                     <h6 class="title is-6">Highest Recoveries:</h6>
-                    <img width="30px" :src="countryFlag.cases">
+                    <img width="30px" :src="countryFlag.recoveries">
 
-                    <h3><strong>Country:</strong> {{ getHighestCase.country }}</h3>  
-                    <h3><strong>Total Cases:</strong> {{ getHighestCase.cases }}</h3>
+                    <h3><strong>Country:</strong> {{ getHighestRecoveries.country }}</h3>  
+                    <h3><strong>Total Cases:</strong> <span id="recoveries"></span></h3>
                 </div>
                 <div class="column is-4 highest-deaths">
                     <h6 class="title is-6">Highest Deaths:</h6>
-                    <img width="30px" :src="countryFlag.cases">
+                    <img width="30px" :src="countryFlag.deaths">
 
-                    <h3><strong>Country:</strong> {{ getHighestCase.country }}</h3>  
-                    <h3><strong>Total Cases:</strong> {{ getHighestCase.cases }}</h3>
+                    <h3><strong>Country:</strong> {{ getHighestDeaths.country }}</h3>  
+                    <h3><strong>Total Cases:</strong> <span id="deaths"></span></h3>
                 </div>
             </div>
         </div>
@@ -31,6 +32,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
+import { CountUp } from 'countup.js';
 
 export default {
     data() {
@@ -44,14 +46,21 @@ export default {
     },
 
     computed: {
-        ...mapGetters('covid', ['getCovidData', 'getHighestCase', 'getIsLoading']),
+        ...mapGetters('covid', ['getCovidData', 'getHighestCase', 'getHighestRecoveries', 'getHighestDeaths', 'getIsLoading']),
 
     },
 
     async mounted() {
         await this.$store.dispatch('covid/allCovid');
         await this.$store.dispatch('covid/highestCasesCountry');
+        await this.$store.dispatch('covid/highestRecoveriesCountry');
+        await this.$store.dispatch('covid/highestDeathsCountry');
         this.getCasesFlag();
+        this.getRecoveriesFlag();
+        this.getDeathsFlag();
+        this.countCases('cases', this.getHighestCase.cases);
+        this.countCases('recoveries', this.getHighestRecoveries.recovered);
+        this.countCases('deaths', this.getHighestDeaths.deaths);
     },
 
     methods: {
@@ -59,6 +68,23 @@ export default {
             const data = this.getHighestCase;
             
             this.countryFlag.cases = data.countryInfo.flag;
+        },
+
+        getRecoveriesFlag() {
+            const data = this.getHighestRecoveries;
+            
+            this.countryFlag.recoveries = data.countryInfo.flag;
+        },
+
+        getDeathsFlag() {
+            const data = this.getHighestDeaths;
+            
+            this.countryFlag.deaths = data.countryInfo.flag;
+        },
+
+        countCases(id, cases) {
+            const countUp = new CountUp(id, cases);
+            countUp.start();
         }
     }
 }
