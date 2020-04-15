@@ -1,6 +1,7 @@
 <template>
     <div class="map-container">
         <div id="mapid">
+            <img v-if="getIsLoading" class="loading" src="@/assets/loading.gif" />
         </div>
     </div>
 </template>
@@ -24,7 +25,7 @@ export default {
     },
 
     computed: {
-        ...mapGetters('covid', ['getCovidData', 'getGeoData', 'getCurrentGeoCountry']),
+        ...mapGetters('covid', ['getCovidData', 'getGeoData', 'getCurrentGeoCountry', 'getIsLoading']),
     },
 
     async created() {
@@ -143,6 +144,21 @@ export default {
 </script>
 
 <style lang="scss">
+    .loading {
+        z-index: 999999999;
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        top: 0;
+        bottom: 100px;
+        margin-top: auto;
+        margin-bottom: auto;
+        border-radius: 50%;
+        width: 56px;
+    }
+
     #mapid { 
         height: 100vh;
         width: 100%; 

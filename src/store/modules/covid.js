@@ -6,6 +6,8 @@ const state = {
     allData: [],
     geoData: [],
     currentGeoCountry: '',
+    highestCasesCountry: [],
+    isLoading: false,
 }
 
 // GETTERS
@@ -22,15 +24,14 @@ const getters = {
         return state.currentGeoCountry;
     },
 
-    getHighestCase: state => {
-        const country = state.allData;
-
-        const res = country.map( (item) => {
-            return item.cases;
-        });
-
-        return Math.max(res);
+    getHighestCase: (state) => {
+        // return 'test'
+        return state.highestCasesCountry;
     },
+
+    getIsLoading: state => {
+        return state.isLoading;
+    }
 
 }
 
@@ -46,6 +47,14 @@ const mutations = {
 
     SET_CURRENT_GEOCOUNTRY(state, currentGeoCountry) {
         state.currentGeoCountry = currentGeoCountry;
+    },
+
+    SET_HIGHEST_CASES_COUNTRY(state, highestCasesCountry) {
+        state.highestCasesCountry = highestCasesCountry;
+    },
+
+    SET_ISLOADING(state, isLoading) {
+        state.isLoading = isLoading;
     }
 
 }
@@ -54,10 +63,14 @@ const mutations = {
 const actions = {
 
     async allCovid({ commit }) {
+        commit('SET_ISLOADING', true);
+
         try {
             const response = await axios.get('https://corona.lmao.ninja/countries');
             const allTasks = response.data;
             commit('SET_COVID', allTasks);
+            commit('SET_ISLOADING', false);
+
         } catch (error) {  
             console.error(error);
         }
@@ -79,22 +92,17 @@ const actions = {
             console.log(error);
         }
 
-            // axios.get('https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson')
-            // .then( res => {
-            //     // console.log(res);
-            //     this.geo = res.data.features;
-            // })
-            // .catch(error => {
-            //     console.log(error);
-            // });
+    },
 
-            // this.geo.forEach(item => {
-            //     if(item.properties.SOV_A3 === currentMap) {
-            //         console.log(item.SOV_A3);
-            //         leaflet.geoJson(item).addTo(this.map);
-            //     }
-            // });
+    async highestCasesCountry({ commit, state }) {
+        const country = await state.allData;
+
+        const highest = country.reduce( (max, map) => (max.cases > map.cases) ? max : map);
+
+        await commit('SET_HIGHEST_CASES_COUNTRY', highest);
     }
+
+
 
 }
 

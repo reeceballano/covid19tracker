@@ -79,13 +79,16 @@ export default {
     position: absolute;
     z-index: 99999;
     background: #396b967d;
-    width: 300px;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100px;
-    top: 14%;
-    left: 6%;
+    top: 0%;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
 
     select {
       border: 0;
