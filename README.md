@@ -24,7 +24,7 @@ npm run lint
 
 - Vuejs
 - Vuex
-- API (https://corona.lmao.ninja/countries)
+- API (https://corona.lmao.ninja/v2/countries)
 - GEOLOCATION (https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson)
 - Countup.js
 - Leaflet.js (Map)

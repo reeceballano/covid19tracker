@@ -83,7 +83,7 @@ const actions = {
         commit('SET_ISLOADING', true);
 
         try {
-            const response = await axios.get('https://corona.lmao.ninja/countries');
+            const response = await axios.get('https://corona.lmao.ninja/v2/countries');
             const allData = response.data;
             commit('SET_COVID', allData);
             commit('SET_ISLOADING', false);
